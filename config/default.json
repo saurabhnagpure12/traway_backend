@@ -1,4 +1,0 @@
-{
-    "jwtSecret" : "Erwin Tarway",
-    "mongoURI" : "mongodb+srv://adminermin:techermin@erwintarway.cv7gf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-}
