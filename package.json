@@ -10,7 +10,6 @@
   "author": "Ermin Tech Team",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",

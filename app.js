@@ -40,14 +40,9 @@ app.get("/", function (req, res) {
 
 // Load Routes
 const appRouter = require('./app/routes/index.js');
-// const users = require("./routes/api/users");
-// const auth = require("./routes/api/auth");
-//
-//
+
 
 // Using Routes
-// app.use("/api/users", users);
-// app.use("/api/auth", auth);
 app.use("/api", appRouter);
 
 

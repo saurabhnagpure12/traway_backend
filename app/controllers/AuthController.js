@@ -9,8 +9,8 @@ exports.sendOTP = function (req, res) {
 
   try{
     const {emailPhone} = req.body;
-
-    if(validator.isEmail(emailPhone)){
+    //TODO: generate OTP
+    if(validator.isEmail(emailPhone)){ // check if the value is email
 
       const message = {
          from: config.get('nodemailerUserEmail'), // Sender address
@@ -27,13 +27,16 @@ exports.sendOTP = function (req, res) {
      });
 
     }
-    // if(validator.isPhone(emailPhone)){
-    //
-    // }
+    else if(validator.isPhone(emailPhone)){ // check if the value is phone number
 
-    res.status(400).json({
-      data: "invalid email or phone number"
-    });
+    }
+    else{
+      res.status(400).json({
+        data: "invalid email or phone number"
+      });
+    }
+
+
 
 
   }
@@ -43,5 +46,10 @@ exports.sendOTP = function (req, res) {
     });
   }
 
+
+}
+
+
+exports.verifyOTP = function (req, res) {
 
 }

@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 
 
 router.post('/', authController.sendOTP);
-
+// router.post('/verify', authController.veryOTP);
 
 
 
