@@ -43,7 +43,7 @@ const appRouter = require('./app/routes/index.js');
 
 
 // Using Routes
-app.use("/api", appRouter);
+app.use("/api/v1", appRouter);
 
 
 const PORT = process.env.PORT || 5000;

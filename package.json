@@ -1,7 +1,7 @@
 {
   "name": "ermin-traway-backend",
   "version": "1.0.0",
-  "description": "Backend for Ermin Traway app\\",
+  "description": "Backend for Ermin Traway app",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

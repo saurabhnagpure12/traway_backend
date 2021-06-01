@@ -5,7 +5,11 @@ const { check } = require('express-validator');
 
 
 
-router.post('/', authController.sendOTP);
+router.post(
+  '/',
+  check("email", "Email must be valid and required").isEmail(),
+  authController.sendOTP
+);
 // router.post('/verify', authController.veryOTP);
 
 
