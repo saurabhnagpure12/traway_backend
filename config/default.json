@@ -1,0 +1,6 @@
+{
+    "jwtSecret" : "Ermin Traway",
+    "mongoURI" : "mongodb+srv://adminermin:techermin@erwintarway.cv7gf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "nodemailerUserEmail" : "admin@erminautomotive.com",
+    "nodemailerUserPassword" : "fnixhowdwyodhrbu"
+}
