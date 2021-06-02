@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Creating Schema
 
-const LocationSearchSchema = new Schema({
+const UserLocationSearchSchema = new Schema({
     user_id:{
         type: Schema.Types.ObjectId,
         ref: 'user'
@@ -27,6 +27,6 @@ const LocationSearchSchema = new Schema({
     }
 });
 
-const LocationSearch = mongoose.model('searchlocation', LocationSearchSchema);
+const LocationSearch = mongoose.model('searchlocation', UserLocationSearchSchema);
 
 module.exports = LocationSearch;

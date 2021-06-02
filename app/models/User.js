@@ -14,16 +14,14 @@ const UserSchema = new Schema({
         required: true,
         unique: true
     },
-    phone:{
-        type: Number,
-        required: true
-    },
-    password:{
-        type: String,
-        required: true
-    },
     otp:{
-        type: Number
+        number:{
+            type: Number,
+            min: [6]
+        },
+        expires_at:{
+            type: Date
+        }
     },
     profile_pic : {
         type: String
