@@ -12,7 +12,7 @@ const CircleSchema = new Schema({
     members:[{
         user_id:{
             type: Schema.Types.ObjectId,
-            ref: true
+            ref: 'user'
         }
     }],
     created_at:{
