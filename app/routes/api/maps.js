@@ -2,9 +2,12 @@ var express = require('express');
 var router = express.Router();
 var mapsController = require('../../controllers/MapsController.js');
 
+// middlewares
+const auth = require('../../middleware/auth');
 
-router.post('/users/locations', mapsController.storeUserLocationSearch);
-router.post('/routes', mapsController.storeRoute);
+
+router.post('/users/locations', auth, mapsController.storeUserLocationSearch);
+router.post('/routes', auth,mapsController.storeRoute);
 
 
 
