@@ -9,28 +9,29 @@ const UserLocationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     },
-    full_address:{
-        type: String,
-        required: true
-    },
-    short_code:{
-        type: String,
-        required: true
-    },
-    lat_long:{
-        x:{
-            type: String
+    start:{
+        lat:{
+            type: String,
+            required: true
         },
-        y:{
-            type: String
-        }
+        long: {
+            type: String,
+            required: true
+        },
+    },
+    end:{
+        lat:{
+            type: String,
+            required: true
+        },
+        long: {
+            type: String,
+            required: true
+        },
     },
     created_at:{
         type: Date,
         default: Date.now
-    },
-    updated_at:{
-        type: Date
     }
 });
 

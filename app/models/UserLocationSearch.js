@@ -10,23 +10,32 @@ const UserLocationSearchSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     },
-    lat_long:{
-        x:{
-            type: String
-        },
-        y:{
-            type: String
-        }
+    full_address:{
+        type: String,
+        // required: true
     },
+    short_code:{
+        type: String,
+        // required: true
+    },
+    recent_search_locations: [
+        {
+            lat:{
+                type: String,
+                required: true
+            },
+            long: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     created_at:{
         type: Date,
         default: Date.now
-    },
-    updated_at:{
-        type: Date
     }
 });
 
-const LocationSearch = mongoose.model('searchlocation', UserLocationSearchSchema);
+const UserSearchedLoactions = mongoose.model('searchlocations', UserLocationSearchSchema);
 
-module.exports = LocationSearch;
+module.exports = UserSearchedLoactions;
