@@ -6,8 +6,8 @@ var mapsController = require('../../controllers/MapsController.js');
 const auth = require('../../middleware/auth');
 
 
-router.post('/users/locations', auth, mapsController.storeUserLocationSearch);
-router.post('/routes', auth,mapsController.storeRoute);
+router.post('/locations', auth, mapsController.storeUserLocationSearch);
+router.post('/routes', auth, mapsController.storeRoute);
 
 
 

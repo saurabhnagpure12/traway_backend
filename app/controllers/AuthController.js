@@ -9,10 +9,7 @@ const configuration = require("../util/configurations.js");
 const User = require("../models/User");
 
 function generateOTP() {
-  let otp = "";
-  for (let i = 0; i < 6; i++) {
-    otp += Math.floor(Math.random() * 10).toString();
-  }
+  let otp = String.valueOf(Math.floor(100000 + Math.random() * 900000));
   return parseInt(otp, 10);
 }
 
@@ -81,7 +78,7 @@ exports.verifyOTP = async function (req, res) {
     const currentDate = new Date();
     const expiryDate = user.otp.expires_at;
     console.log(expiryDate, expiryDate.getHours(), expiryDate.getMinutes());
-    // Check for validation of otp 
+    // Check for validation of otp
     if (currentDate.getTime() <= expiryDate) {
       if (user.otp.number === OTP) {
         // return token and flush old otp

@@ -20,14 +20,7 @@ const UserLocationSearchSchema = new Schema({
     },
     recent_search_locations: [
         {
-            lat:{
-                type: String,
-                required: true
-            },
-            long: {
-                type: String,
-                required: true
-            }
+          type: String,
         }
     ],
     created_at:{

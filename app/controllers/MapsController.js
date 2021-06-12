@@ -6,21 +6,21 @@ const UserLocation = require("../models/UserLocation");
 exports.storeUserLocationSearch = async function (req, res) {
   try {
     // TODO: Add Validations for post data
-    const { lat, long } = req.body;
+    const { location_id } = req.body;
     const user = await UserSearchedLoactions.findOne({ user_id: req.user.id });
     // if user has has no locations till this point create new one
     if (!user) {
       const createdUserLocations = await new UserSearchedLoactions({
         user_id: req.user.id,
-        recent_search_locations: [{ lat, long }],
+        recent_search_locations: [location_id],
       }).save();
       return res.status(200).json({ data: {'msg' : 'Location Created Successfully'}});
-    } 
+    }
     else {
       // Grab all previous locations
       const locations = user.recent_search_locations;
       // enQueue the current location
-      locations.unshift({ lat, long });
+      locations.unshift(location_id);
       // check if you have more than 5 locations
       if (locations.length > 5) {
         // Delete all elements from 5 to arrayLength
@@ -38,6 +38,7 @@ exports.storeUserLocationSearch = async function (req, res) {
     }
     return res.status(200).json({ data: [{'msg' : 'Location Updated Successfully'}]});
   } catch (err) {
+
     res.status(500).json({
       data: [{ msg: "Error occurred" }],
     });
@@ -45,12 +46,12 @@ exports.storeUserLocationSearch = async function (req, res) {
 };
 
 //Store searched route data i.e. start & end locations
-// TODO: @nitish check this: I assume this route has access only to admin if yes we need to add middleware  
+// TODO: @nitish check this: I assume this route has access only to admin if yes we need to add middleware
 exports.storeRoute = async function (req, res) {
   try {
     // TODO: Add Validations for post data
     /*
-      Assumption: 
+      Assumption:
       1. start is object containing { lat: "", long: "" }
       2. Similarly: end is object containing { lat: "", long: "" }
 
