@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var usersController = require('../../controllers/UsersController.js');
+var userController = require('../../controllers/UserController.js');
 
 // middlewares
 const auth = require('../../middleware/auth');
 
 
-router.post('/name', auth, usersController.saveName);
-router.get('/profile', auth,usersController.fetchProfile);
+router.post('/name', auth, userController.saveName);
+router.get('/profile', auth, userController.getProfile);
 
 
 

@@ -26,6 +26,10 @@ const UserSchema = new Schema({
     profile_pic : {
         type: String
     },
+    circle: [{
+        type: Schema.Types.ObjectId,
+        ref: 'circle'
+    }],
     created_at:{
         type: Date,
         default: Date.now

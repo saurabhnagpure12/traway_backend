@@ -9,10 +9,19 @@ const CircleSchema = new Schema({
         type: String,
         required:true
     },
+    circle_code:{
+        type: String,
+        required:true
+    },
     members:[{
+        _id: false,
         user_id:{
             type: Schema.Types.ObjectId,
             ref: 'user'
+        },
+        type: {
+          type: String,
+          required: true
         }
     }],
     created_at:{

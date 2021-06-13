@@ -1,6 +1,6 @@
 // Load Models
 const UserSearchedLoactions = require("../models/UserLocationSearch");
-const UserLocation = require("../models/UserLocation");
+const UserRoute = require("../models/UserRoute");
 
 //Save recent user location searches
 exports.storeUserLocationSearch = async function (req, res) {
@@ -68,8 +68,8 @@ exports.storeRoute = async function (req, res) {
     */
     const { start, end } = req.body;
     // Since the document is returned holding into variable there is no other purpose or no usage of it in further code
-    const savedLocation = await new UserLocation({user_id: req.user.id,start, end }).save();
-    return res.status(200).json({ data: [{ 'msg' : 'User Locations Added SuccessFully' }]})
+    const savedLocation = await new UserRoute({user_id: req.user.id, start, end }).save();
+    return res.status(200).json({ data: [{ 'msg' : 'User Route Added Successfully' }]})
   } catch (err) {
     return res.status(500).json({
       data: [{ msg : "Error occurred"}],

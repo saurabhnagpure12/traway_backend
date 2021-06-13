@@ -9,8 +9,8 @@ const configuration = require("../util/configurations.js");
 const User = require("../models/User");
 
 function generateOTP() {
-  let otp = String.valueOf(Math.floor(100000 + Math.random() * 900000));
-  return parseInt(otp, 10);
+  let otp = Math.floor(100000 + Math.random() * 900000);
+  return 123;
 }
 
 // @route http://localhost:5000/api/v1/authenticate
@@ -63,6 +63,7 @@ exports.sendOTP = async function (req, res) {
       .status(200)
       .json({ data : [{ msg: "OTP sent To your email ID " }] });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
   }
 };
