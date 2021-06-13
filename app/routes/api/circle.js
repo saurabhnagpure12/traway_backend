@@ -7,7 +7,7 @@ const auth = require('../../middleware/auth');
 
 
 router.post('/', auth, circleController.createCircle);
-router.get('/', auth, circleController.getCircleInfo);
+router.get('/', auth, circleController.getCircles);
 router.delete('/', auth, circleController.deleteCircle);
 router.put('/name', auth, circleController.editCircleName);
 router.post('/member', auth, circleController.joinCircle);

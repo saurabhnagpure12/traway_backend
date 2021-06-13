@@ -27,18 +27,25 @@ exports.createCircle = async function (req, res) {
   }
   catch(e){
     res.status(500).json({
-      data: [{ msg: "Error occurred" }],
+      data: [{ msg: "Failed creating circle" }],
     });
   }
 }
 
-exports.getCircleInfo = async function (req, res) {
+exports.getCircles = async function (req, res) {
   try{
+    const userId = req.user.id;
+    const userCircles = await Circle.find({'members.user_id': userId});
+    return res.status(200).json({
+      status: "success",
+      msg: "User circles fetched",
+      data: userCircles
+    });
 
   }
   catch(e){
     res.status(500).json({
-      data: [{ msg: "Error occurred" }],
+      data: [{ msg: "Error occurred while fetching user circles" }],
     });
   }
 }
