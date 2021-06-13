@@ -10,7 +10,7 @@ const User = require("../models/User");
 
 function generateOTP() {
   let otp = Math.floor(100000 + Math.random() * 900000);
-  return 123;
+  return otp;
 }
 
 // @route http://localhost:5000/api/v1/authenticate
