@@ -8,6 +8,7 @@ const auth = require('../../middleware/auth');
 
 router.post('/locations', auth, mapsController.storeUserLocationSearch);
 router.post('/routes', auth, mapsController.storeRoute);
+router.get('/stored-routes', auth, mapsController.fetchRoutes);
 
 
 
