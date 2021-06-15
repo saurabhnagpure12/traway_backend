@@ -1,6 +1,5 @@
 // Load Models
 const UserSearchedLoactions = require("../models/UserLocationSearch");
-const UserRoutes = require("../models/UserRoute");
 const UserRoute = require("../models/UserRoute");
 
 //Save recent user location searches
@@ -80,7 +79,7 @@ exports.storeRoute = async function (req, res) {
 
 exports.fetchRoutes = async function(req, res){
   try{
-    const allStoredRoutes = await UserRoutes.find({});
+    const allStoredRoutes = await UserRoute.find({});
     return res.status(200).json({ data: allStoredRoutes });
   }
   catch(err){
