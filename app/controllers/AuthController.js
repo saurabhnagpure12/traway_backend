@@ -16,6 +16,8 @@ function generateOTP() {
 // @route http://localhost:5000/api/v1/authenticate
 exports.sendOTP = async function (req, res) {
   try {
+    // For sending the user state as response userStatemessage is used defaults to USER_CREATED will change if user exist in DB
+    let userStatemessage = "USER_CREATED";
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -25,24 +27,21 @@ exports.sendOTP = async function (req, res) {
     const date = new Date();
     // set expiry date with current date +  (min * sec * milliseconds) since Date.getTime() return in milliSeconds
     const expiry_date = date.getTime() + 2 * 60 * 1000;
-    // Check if user exists if he does update else create new one and return document with updated fields
-    const user = await User.findOneAndUpdate(
-      { email },
-      {
-        $set: {
-          email,
-          otp: {
-            number: otp,
-            expires_at: expiry_date,
-          },
-        },
-      },
-      {
-        new: true, // return document
-        upsert: true, // creates new document
-        setDefaultsOnInsert: true,
-      }
-    );
+    // Check if User Exists
+    const user = await User.findOne({ email });
+    // if user does not exist create One
+    if(!user){
+      await new User({
+        email,
+        otp: {
+          number: otp,
+          expires_at: expiry_date
+        }
+      }).save();
+    }
+    else{
+      userStatemessage = "USER_EXIST";
+    }
     // Send Email
     const message = {
       from: config.get("nodemailerUserEmail"), // Sender address
@@ -61,7 +60,7 @@ exports.sendOTP = async function (req, res) {
     // TODO: change res data structure and if user is new or existing
     return res
       .status(200)
-      .json({ data : [{ msg: "OTP sent To your email ID " }] });
+      .json({ data : [{ msg: "OTP sent To your email ID ", userState: userStatemessage }] });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
