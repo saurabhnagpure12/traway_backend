@@ -76,9 +76,10 @@ exports.verifyOTP = async function (req, res) {
     }
     const { email, OTP } = req.body;
     const user = await User.findOne({ email });
+
     const currentDate = new Date();
     const expiryDate = user.otp.expires_at;
-    console.log(expiryDate, expiryDate.getHours(), expiryDate.getMinutes());
+    // console.log(expiryDate, expiryDate.getHours(), expiryDate.getMinutes());
     // Check for validation of otp
     if (currentDate.getTime() <= expiryDate) {
       if (user.otp.number === OTP) {
@@ -105,7 +106,8 @@ exports.verifyOTP = async function (req, res) {
             console.error(err);
             throw err;
           }
-          return res.status(200).json({ token });
+          let is_new_user = (user.username)? false: true;
+          return res.status(200).json({ is_new_user, token });
         });
       } // End if for otp comparision
       else {
