@@ -111,7 +111,7 @@ exports.verifyOTP = async function (req, res) {
             throw err;
           }
 
-          let is_new_user = (user.name == undefined)? false: true;
+          let is_new_user = (user.name == undefined)? true: false;
           return res.status(200).json({ is_new_user, token });
         });
       } // End if for otp comparision
