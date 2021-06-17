@@ -8,12 +8,12 @@ exports.saveName = async function (req, res) {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { username } = req.body;
+    const { name } = req.body;
     await User.updateOne(
       { _id: req.user.id },
       {
         $set: {
-          username,
+          name,
         },
       }
     );

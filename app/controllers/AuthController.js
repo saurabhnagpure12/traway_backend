@@ -17,7 +17,7 @@ function generateOTP() {
 exports.sendOTP = async function (req, res) {
   try {
     // For sending the user state as response userStatemessage is used defaults to USER_CREATED will change if user exist in DB
-    let userStatemessage = "USER_CREATED";
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -29,19 +29,24 @@ exports.sendOTP = async function (req, res) {
     const expiry_date = date.getTime() + 2 * 60 * 1000;
     // Check if User Exists
     const user = await User.findOne({ email });
-    // if user does not exist create One
-    if(!user){
-      await new User({
-        email,
-        otp: {
-          number: otp,
-          expires_at: expiry_date
-        }
-      }).save();
-    }
-    else{
-      userStatemessage = "USER_EXIST";
-    }
+
+    await User.findOneAndUpdate(
+      {email: email},
+      {
+        $set: {
+          email: email,
+          otp: {
+            number: otp,
+            expires_at: expiry_date
+          }
+        },
+      },
+      {
+        new: true,
+        upsert: true
+      }
+    );
+
     // Send Email
     const message = {
       from: config.get("nodemailerUserEmail"), // Sender address
@@ -60,7 +65,7 @@ exports.sendOTP = async function (req, res) {
     // TODO: change res data structure and if user is new or existing
     return res
       .status(200)
-      .json({ data : [{ msg: "OTP sent To your email ID ", userState: userStatemessage }] });
+      .json({ data : [{ msg: "OTP sent To your email ID " }] });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
@@ -105,7 +110,8 @@ exports.verifyOTP = async function (req, res) {
             console.error(err);
             throw err;
           }
-          let is_new_user = (user.username)? false: true;
+
+          let is_new_user = (user.name == undefined)? false: true;
           return res.status(200).json({ is_new_user, token });
         });
       } // End if for otp comparision
