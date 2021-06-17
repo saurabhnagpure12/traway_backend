@@ -1,6 +1,5 @@
 // Load Models
 const UserSearchedLoactions = require("../models/UserLocationSearch");
-const UserRoutes = require("../models/UserRoute");
 const UserRoute = require("../models/UserRoute");
 
 //Save recent user location searches

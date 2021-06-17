@@ -74,6 +74,31 @@ exports.editCircleName = async function (req, res) {
 
 exports.joinCircle = async function (req, res) {
   try{
+    const { circle_code } = req.body;
+    const userId = req.user.id;
+
+    const circle = await Circle.findOne({circle_code: circle_code});
+
+    let responseMsg = "";
+    if(circle == null){
+      responseMsg = "Invalid Circle Code";
+    }
+
+    let userExists = await Circle.find({circle_code: circle_code, 'members.user_id' : userId});
+
+    if(userExists.length != 0){
+      responseMsg = "User already a member";
+    }
+    else{
+      circle.members.push({user_id: userId, type: "member"});
+      circle.save();
+      responseMsg = "Joined Circle";
+    }
+
+    return res.status(200).json({
+      status: "success",
+      msg: responseMsg
+    });
 
   }
   catch(e){
