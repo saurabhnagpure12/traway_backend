@@ -31,19 +31,20 @@ exports.sendOTP = async function (req, res) {
     const user = await User.findOne({ email });
 
     await User.findOneAndUpdate(
-      {email: email},
+      { email: email },
       {
         $set: {
           email: email,
           otp: {
             number: otp,
-            expires_at: expiry_date
-          }
+            expires_at: expiry_date,
+          },
         },
       },
       {
         new: true,
-        upsert: true
+        upsert: true,
+        setDefaultsOnInsert: true,
       }
     );
 
@@ -65,7 +66,7 @@ exports.sendOTP = async function (req, res) {
     // TODO: change res data structure and if user is new or existing
     return res
       .status(200)
-      .json({ data : [{ msg: "OTP sent To your email ID " }] });
+      .json({ data: [{ msg: "OTP sent To your email ID " }] });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
@@ -80,10 +81,11 @@ exports.verifyOTP = async function (req, res) {
     }
     const { email, OTP } = req.body;
     const user = await User.findOne({ email });
-
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: "User Does Not Exist" }] });
+    }
     const currentDate = new Date();
     const expiryDate = user.otp.expires_at;
-    // console.log(expiryDate, expiryDate.getHours(), expiryDate.getMinutes());
     // Check for validation of otp
     if (currentDate.getTime() <= expiryDate) {
       if (user.otp.number === OTP) {
@@ -97,7 +99,7 @@ exports.verifyOTP = async function (req, res) {
             },
           },
           {
-            new : true // return document
+            new: true, // return document
           }
         );
         const payload = {
@@ -111,7 +113,7 @@ exports.verifyOTP = async function (req, res) {
             throw err;
           }
 
-          let is_new_user = (user.name == undefined)? true: false;
+          let is_new_user = user.name == undefined ? true : false;
           return res.status(200).json({ is_new_user, token });
         });
       } // End if for otp comparision
@@ -122,13 +124,13 @@ exports.verifyOTP = async function (req, res) {
     else {
       throw new Error("OTP Expired");
     }
-  } // end try
-  catch (err) {
+  } catch (err) {
+    // end try
     console.error(err.message);
-    if(err.message === "OTP is Not Valid") {
+    if (err.message === "OTP is Not Valid") {
       return res.status(400).json({ errors: [{ msg: err.message }] });
     }
-    if(err.message === "OTP Expired"){
+    if (err.message === "OTP Expired") {
       return res.status(400).json({ errors: [{ msg: err.message }] });
     }
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
