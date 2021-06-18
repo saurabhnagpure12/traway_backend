@@ -8,7 +8,7 @@ const auth = require("../../middleware/auth");
 
 router.post(
   "/name",
-  [auth, check("username", "username is required").not().isEmpty()],
+  [auth, check("name", "name is required").not().isEmpty()],
   userController.saveName
 );
 router.get("/profile", auth, userController.getProfile);
