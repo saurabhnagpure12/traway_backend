@@ -86,6 +86,7 @@ exports.verifyOTP = async function (req, res) {
     }
     const currentDate = new Date();
     const expiryDate = user.otp.expires_at;
+    // console.log(expiryDate, expiryDate.getHours(), expiryDate.getMinutes());
     // Check for validation of otp
     if (currentDate.getTime() <= expiryDate) {
       if (user.otp.number === OTP) {

@@ -9,8 +9,8 @@ exports.saveName = async function (req, res) {
       return res.status(400).json({ errors: errors.array() });
     }
     const { name } = req.body;
-    const user = await User.findById(req.user.id);
-    if (!user) {
+    const user= await User.findById(req.user.id);
+    if(!user){
       return res.status(400).json({ errors: [{ msg: "User Does Not Exist" }] });
     }
     await User.updateOne(
