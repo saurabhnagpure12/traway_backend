@@ -10,14 +10,6 @@ const UserLocationSearchSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     },
-    full_address:{
-        type: String,
-        // required: true
-    },
-    short_code:{
-        type: String,
-        // required: true
-    },
     recent_search_locations: [
         {
           type: String,

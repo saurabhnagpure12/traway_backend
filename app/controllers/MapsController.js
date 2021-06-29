@@ -90,10 +90,10 @@ exports.fetchRoutes = async function(req, res){
   try{
     // Fetch current users recent locations
     const UserRecentLocations = await UserSearchedLoactions.findOne({ user_id: req.user.id });
-    // Check if there are any locations 
+    // Check if there are any locations
     if(UserRecentLocations)
       return res.status(200).json({ data: UserRecentLocations.recent_search_locations });
-    return res.status(200).json({ data: [{ msg : 'User has No Searched Locations' }] });
+    return res.status(200).json({ data: [] });
   }
   catch(err){
     console.log(err.message);
@@ -102,4 +102,3 @@ exports.fetchRoutes = async function(req, res){
     });
   }
 }
-

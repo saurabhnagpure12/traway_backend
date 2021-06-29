@@ -17,7 +17,7 @@ exports.saveName = async function (req, res) {
       { _id: req.user.id },
       {
         $set: {
-          name,
+           name
         },
       }
     );
