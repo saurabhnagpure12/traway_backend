@@ -137,3 +137,20 @@ exports.verifyOTP = async function (req, res) {
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
   }
 };
+
+
+
+
+exports.logoutUser = async function (req, res) {
+  try{
+    const checkUser = await User.findById(req.user.id);
+    if (!checkUser) {
+      return res.status(400).json({ data: [{ msg: "Invalid Auth Token" }] });
+    }
+    await User.remove("");
+  }
+  catch (err) {
+    return res.status(500).json({ errors: [{ msg: "Server Error" }] });
+  }
+
+};

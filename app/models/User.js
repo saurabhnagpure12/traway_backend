@@ -25,9 +25,13 @@ const UserSchema = new Schema({
     profile_pic : {
         type: String
     },
-    circle: [{
+    circles: [{
         type: Schema.Types.ObjectId,
         ref: 'circle'
+    }],
+	ciphers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'cipher'
     }],
     created_at:{
         type: Date,
