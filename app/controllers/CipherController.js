@@ -69,13 +69,14 @@ exports.deleteCipher = async function (req, res) {
   try {
     const { cipher_code } = req.body;
     const userId = req.user.id;
-    let cipher = await Cipher.find({
+    let cipher = await Cipher.findOne({
       cipher_code: cipher_code
     });
 
     if (cipher.length != 0) {
+	  await User.findByIdAndUpdate( userId, { $pullAll: {ciphers: [cipher._id] } } );
       await Cipher.deleteOne({ cipher_code: cipher_code });
-
+	  
       return res
         .status(200)
         .json({ data: [{ msg: "Deleted Cipher with code: " + cipher_code }] });

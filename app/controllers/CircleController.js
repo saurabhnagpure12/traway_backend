@@ -66,13 +66,14 @@ exports.deleteCircle = async function (req, res) {
   try {
     const { circle_code } = req.body;
     const userId = req.user.id;
-    let circle = await Circle.find({
+    let circle = await Circle.findOne({
       circle_code: circle_code,
       "members.user_id": userId,
       "members.type": "admin",
     });
 
     if (circle.length != 0) {
+	  await User.findByIdAndUpdate( userId, { $pullAll: {circles: [circle._id] } } );
       await Circle.deleteOne({ circle_code: circle_code });
 
       return res
