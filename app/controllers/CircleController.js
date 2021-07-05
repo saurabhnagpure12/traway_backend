@@ -20,7 +20,7 @@ exports.createCircle = async function (req, res) {
       circle_code: circleCode,
       members: [{ user_id: req.user.id, type: "admin" }],
     }).save();
-	
+
 	let user = await User.findById(req.user.id);
 	user.circles.push(circle._id);
 	await user.save();
@@ -40,19 +40,29 @@ exports.createCircle = async function (req, res) {
 
 exports.getCircles = async function (req, res) {
   try {
-    
+
 	let user = await User.findById(req.user.id);
 	let circles = [];
-	
+
 	for(let i=0; i< user.circles.length; i++){
-		let circle = await Circle.findById(user.circles[i]);
+		let circle = await Circle.findById(user.circles[i]).lean();
+    let members = [];
+    for(let j=0; j< circle.members.length; j++){
+      let ob = await User.findById(circle.members[j]['user_id']).lean();
+      let member = {
+        email : ob.email,
+        name : ob.name
+      };
+      members.push(member);
+  	}
+    circle.members = members;
 		circles.push(circle);
 	}
 
 	return res.status(200).json({
       status: "success",
       msg: "Circles Fetched",
-	  data: circles
+	    data: circles
     });
   } catch (e) {
     console.log(e);
