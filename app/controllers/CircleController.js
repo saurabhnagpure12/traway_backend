@@ -15,15 +15,22 @@ exports.createCircle = async function (req, res) {
   try {
     const { circle_name } = req.body;
     const circleCode = generateCircleCode();
-    const circle = await Circle({
+    let circle = await Circle({
       circle_name: circle_name,
       circle_code: circleCode,
       members: [{ user_id: req.user.id, type: "admin" }],
     }).save();
 
-	let user = await User.findById(req.user.id);
-	user.circles.push(circle._id);
-	await user.save();
+  	let user = await User.findById(req.user.id);
+  	user.circles.push(circle._id);
+  	await user.save();
+
+    circle = circle.toObject();
+    circle.members = [{
+      email : user.email,
+      name : user.name,
+      type: 'admin'
+    }];
 
     return res.status(200).json({
       status: "success",
@@ -150,11 +157,14 @@ exports.joinCircle = async function (req, res) {
 
     const circle = await Circle.findOne({ circle_code: circle_code });
 
-    let responseMsg = "";
     if (circle == null) {
-      responseMsg = "Invalid Circle Code";
+      return res.status(400).json({
+        status: "failed",
+        msg: 'Invalid Circle Code',
+      });
     }
 
+    let responseMsg = "";
     let userExists = await Circle.find({
       circle_code: circle_code,
       "members.user_id": userId,
@@ -166,6 +176,11 @@ exports.joinCircle = async function (req, res) {
       if (circle.members.length >= 10) {
         responseMsg = "Circle Member Limit Reached";
       } else {
+
+        let user = await User.findById(userId);
+      	user.circles.push(circle._id);
+      	await user.save();
+
         circle.members.push({ user_id: userId, type: "member" });
         circle.save();
         responseMsg = "Joined Circle";
