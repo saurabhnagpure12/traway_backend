@@ -91,7 +91,10 @@ exports.deleteCircle = async function (req, res) {
     });
 
     if (circle.length != 0) {
-	  await User.findByIdAndUpdate( userId, { $pullAll: {circles: [circle._id] } } );
+      circle.members.forEach(async (value)=>{
+        await User.findByIdAndUpdate( value.user_id, { $pullAll: {circles: [circle._id] } } );
+      });
+
       await Circle.deleteOne({ circle_code: circle_code });
 
       return res
@@ -212,6 +215,9 @@ exports.removeMember = async function (req, res) {
         { circle_code: circle_code },
         { $pullAll: { members: [{ user_id: member_user_id }] } }
       );
+
+      await User.findByIdAndUpdate( member_user_id, { $pullAll: {circles: [circle._id] } } );
+
       return res
         .status(200)
         .json({ data: [{ msg: "Member removed successfully from circle" }] });

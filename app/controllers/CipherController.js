@@ -13,14 +13,14 @@ function generateCipherCode() {
 
 exports.createCipher = async function (req, res) {
   try {
-    const { lat_long, place_details, place_area, 
+    const { lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category } = req.body;
     const cipher_code = generateCipherCode();
 	let cipher = await Cipher({
-      cipher_code, lat_long, place_details, place_area, 
+      cipher_code, lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category
     }).save();
-	
+
 	let user = await User.findById(req.user.id);
 	user.ciphers.push(cipher._id);
 	await user.save();
@@ -43,7 +43,7 @@ exports.getCiphers = async function (req, res) {
   try {
     let user = await User.findById(req.user.id);
 	let ciphers = [];
-	
+
 	for(let i=0; i< user.ciphers.length; i++){
 		let cipher = await Cipher.findById(user.ciphers[i]);
 		ciphers.push(cipher);
@@ -54,7 +54,7 @@ exports.getCiphers = async function (req, res) {
       msg: "Cipher Fetched",
 	  data: ciphers
     });
-	
+
   } catch (e) {
     console.log(e);
     res.status(500).json({
@@ -74,9 +74,9 @@ exports.deleteCipher = async function (req, res) {
     });
 
     if (cipher.length != 0) {
-	  await User.findByIdAndUpdate( userId, { $pullAll: {ciphers: [cipher._id] } } );
-      await Cipher.deleteOne({ cipher_code: cipher_code });
-	  
+	     await User.findByIdAndUpdate( userId, { $pullAll: {ciphers: [cipher._id] } } );
+       await Cipher.deleteOne({ cipher_code: cipher_code });
+
       return res
         .status(200)
         .json({ data: [{ msg: "Deleted Cipher with code: " + cipher_code }] });
@@ -99,10 +99,10 @@ exports.deleteCipher = async function (req, res) {
 
 exports.updateCipher = async function (req, res) {
   try {
-    const { cipher_code, lat_long, place_details, place_area, 
+    const { cipher_code, lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category } = req.body;
     const userId = req.user.id;
-	
+
 	let cipher = await Cipher.find({
       cipher_code: cipher_code
     });
@@ -112,7 +112,7 @@ exports.updateCipher = async function (req, res) {
         { cipher_code },
         {
           $set: {
-            cipher_code, lat_long, place_details, place_area, 
+            cipher_code, lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category
           },
         }
@@ -135,4 +135,3 @@ exports.updateCipher = async function (req, res) {
     });
   }
 };
-
