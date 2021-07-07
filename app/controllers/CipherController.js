@@ -15,11 +15,12 @@ exports.createCipher = async function (req, res) {
   try {
     const { lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category } = req.body;
+
     const cipher_code = generateCipherCode();
-	let cipher = await Cipher({
-      cipher_code, lat_long, place_details, place_area,
-			place_state, place_city, place_pincode, place_category
-    }).save();
+	  let cipher = await Cipher({
+        cipher_code, lat_long, place_details, place_area,
+  			place_state, place_city, place_pincode, place_category
+      }).save();
 
 	let user = await User.findById(req.user.id);
 	user.ciphers.push(cipher._id);
@@ -27,7 +28,8 @@ exports.createCipher = async function (req, res) {
 
     return res.status(200).json({
       status: "success",
-      msg: "Cipher Created"
+      msg: "Cipher Created",
+      cipher_code: cipher_code
     });
   } catch (e) {
 	  console.log(e);

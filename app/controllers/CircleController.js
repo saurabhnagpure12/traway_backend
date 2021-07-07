@@ -206,16 +206,19 @@ exports.removeMember = async function (req, res) {
   try {
     const { member_user_id, circle_code } = req.body;
 
-    let circle = await Circle.find({
+    let circle = await Circle.findOne({
       circle_code: circle_code,
       "members.user_id": member_user_id,
     });
 
-    if (circle.length != 0) {
-      await Circle.updateOne(
+    console.log(circle);
+
+    if (circle != null) {
+      let a = await Circle.updateOne(
         { circle_code: circle_code },
         { $pullAll: { members: [{ user_id: member_user_id }] } }
       );
+      console.log(a);
 
       await User.findByIdAndUpdate( member_user_id, { $pullAll: {circles: [circle._id] } } );
 
