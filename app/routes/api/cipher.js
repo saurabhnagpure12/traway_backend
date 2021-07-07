@@ -10,6 +10,8 @@ router.post('/', auth, cipherController.createCipher);
 router.get('/', auth, cipherController.getCiphers);
 router.delete('/', auth, cipherController.deleteCipher);
 router.put('/', auth, cipherController.updateCipher);
+router.get('/search/:cipher_code', auth, cipherController.searchCipher);
+
 
 
 

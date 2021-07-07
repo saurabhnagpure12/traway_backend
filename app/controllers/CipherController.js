@@ -22,9 +22,9 @@ exports.createCipher = async function (req, res) {
   			place_state, place_city, place_pincode, place_category
       }).save();
 
-	let user = await User.findById(req.user.id);
-	user.ciphers.push(cipher._id);
-	await user.save();
+  	let user = await User.findById(req.user.id);
+  	user.ciphers.push(cipher._id);
+  	await user.save();
 
     return res.status(200).json({
       status: "success",
@@ -43,8 +43,8 @@ exports.createCipher = async function (req, res) {
 
 exports.getCiphers = async function (req, res) {
   try {
-    let user = await User.findById(req.user.id);
-	let ciphers = [];
+   let user = await User.findById(req.user.id);
+	 let ciphers = [];
 
 	for(let i=0; i< user.ciphers.length; i++){
 		let cipher = await Cipher.findById(user.ciphers[i]);
@@ -105,11 +105,11 @@ exports.updateCipher = async function (req, res) {
 			place_state, place_city, place_pincode, place_category } = req.body;
     const userId = req.user.id;
 
-	let cipher = await Cipher.find({
+	  let cipher = await Cipher.findOne({
       cipher_code: cipher_code
     });
 
-    if (cipher.length != 0) {
+    if (cipher != null) {
       await Cipher.updateOne(
         { cipher_code },
         {
@@ -137,3 +137,33 @@ exports.updateCipher = async function (req, res) {
     });
   }
 };
+
+
+
+exports.searchCipher = async function(req, res) {
+  try{
+    const { cipher_code } = req.params;
+    let cipher = await Cipher.findOne({
+      cipher_code: cipher_code
+    });
+
+    if (cipher != null) {
+      return res.status(200).json({ data: [{ status: "success", msg: "Cipher Exists", data: cipher }] });
+    } else {
+      return res.status(406).json({
+        data: [
+          {
+            status: "failed",
+            msg: "Invalid cipher_code",
+          },
+        ],
+      });
+    }
+  }
+  catch(e){
+    console.log(e);
+    res.status(500).json({
+      data: [{ msg: "Error occurred while searching cipher" }],
+    });
+  }
+}
