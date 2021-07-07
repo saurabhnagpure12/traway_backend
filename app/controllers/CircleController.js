@@ -57,6 +57,7 @@ exports.getCircles = async function (req, res) {
     for(let j=0; j< circle.members.length; j++){
       let ob = await User.findById(circle.members[j]['user_id']).lean();
       let member = {
+        user_id: ob._id,
         email : ob.email,
         name : ob.name,
         type: circle.members[j]['type']
