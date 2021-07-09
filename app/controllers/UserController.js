@@ -90,3 +90,44 @@ exports.updateProfileImage = async function (req, res) {
     return res.status(500).json({ errors: [{ msg: "Error Occurred while uploading profile image" }] });
   }
 };
+
+
+
+exports.removeProfileImage = async function(req, res){
+  try{
+
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+
+    let ext = user.profile_image.split(".");
+    ext = "."+ext[ext.length-1];
+
+    const params = {
+       Bucket: 'ermin-traway-backend',
+       Key: 'profile_images/'+userId+ext
+    };
+
+    s3.deleteObject(params, async function(err, data) {
+      if(err){
+        throw err;
+      }
+
+      await User.updateOne(
+        { _id: userId },
+        {
+          $set: {
+             profile_image : ""
+          },
+        }
+      );
+
+      return res.status(200).json({ data: [{ msg: "Profile Image Removed" }] });
+    });
+
+  }
+  catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ errors: [{ msg: "Error Occurred while removing profile image" }] });
+  }
+}

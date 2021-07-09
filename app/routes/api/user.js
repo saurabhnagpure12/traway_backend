@@ -15,4 +15,7 @@ router.get("/profile", auth, userController.getProfile);
 
 router.post("/profile/image", auth, userController.updateProfileImage);
 
+router.delete("/profile/image", auth, userController.removeProfileImage);
+
+
 module.exports = router;
