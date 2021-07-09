@@ -17,10 +17,10 @@ router.post(
   "/",
   [
     auth,
-    check("suggestions", "Suggestions are required").not().isEmpty(),
-    check("feedback", "FeedBack is Required").not().isEmpty(),
+    check("message", "message is required").not().isEmpty(),
+    check("reaction_type", "reaction type is required").not().isEmpty(),
   ],
-  reactionController.postReactions
+  reactionController.addReaction
 );
 
 module.exports = router;

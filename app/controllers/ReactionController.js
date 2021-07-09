@@ -37,6 +37,7 @@ exports.getAllReactionByUser = async function (req, res) {
   }
 };
 
+
 exports.getReactions = async function (req, res) {
   try {
     const reactions = await Reaction.find();
@@ -46,28 +47,28 @@ exports.getReactions = async function (req, res) {
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
   }
 };
-exports.postReactions = async function (req, res) {
+
+
+
+exports.addReaction = async function (req, res) {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { suggestions, feedback } = req.body;
-    let report_bug = "";
-    if (req.body.report_bug) {
-      report_bug = req.body.report_bug;
-    }
+    const { message, reaction_type } = req.body;
+
     await new Reaction({
       user: req.user.id,
-      suggestion: suggestions,
-      feedback,
-      report_bug,
+      message,
+      reaction_type
     }).save();
+
     return res.status(200).json({
-      data: [{ msg: "Thanks for the feedback we will get back soon..." }],
+      data: [{ msg: "Reaction Stored" }],
     });
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json({ errors: [{ msg: "Server Error" }] });
+    return res.status(500).json({ errors: [{ msg: "Failed adding reaction" }] });
   }
 };

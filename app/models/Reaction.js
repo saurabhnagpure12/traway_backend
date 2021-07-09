@@ -9,16 +9,13 @@ const ReactionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
   },
-  suggestion: {
+  message: {
     type: String,
     required: true,
   },
-  feedback: {
+  reaction_type: {
     type: String,
     required: true,
-  },
-  report_bug: {
-    type: String, // TODO: to be checked
   },
   created_at: {
     type: Date,
