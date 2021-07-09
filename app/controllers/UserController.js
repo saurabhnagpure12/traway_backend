@@ -53,11 +53,40 @@ exports.getProfile = async function (req, res) {
 
 exports.updateProfileImage = async function (req, res) {
   try {
-    console.log(req.files.profile_image);
-    return res.status(200).json({ data: [{ msg: "Success" }] });
+
+    const userId = req.user.id;
+
+    let file = req.files.profile_image;
+
+    let ext = file.name.split(".");
+    ext = "."+ext[ext.length-1];
+
+    const params = {
+       Bucket: 'ermin-traway-backend',
+       Key: 'profile_images/'+userId+ext,
+       Body: file.data
+    };
+
+    s3.upload(params, async function(err, data) {
+
+     if(err){
+       throw err;
+     }
+
+     await User.updateOne(
+       { _id: userId },
+       {
+         $set: {
+            profile_image : data.Location
+         },
+       }
+     );
+
+     return res.status(200).json({ data: [{ msg: "Profile Image Updated", 'profile_image' : data.Location }] });
+    });
 
   } catch (err) {
     console.log(err.message);
-    return res.status(500).json({ errors: [{ msg: "Server Error" }] });
+    return res.status(500).json({ errors: [{ msg: "Error Occurred while uploading profile image" }] });
   }
 };

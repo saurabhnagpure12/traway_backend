@@ -108,7 +108,7 @@ exports.verifyOTP = async function (req, res) {
             id: updatedUser.id,
           },
         };
-        jwt.sign(payload, config.get("jwtSecret"), {}, (err, token) => {
+        jwt.sign(payload, config.app.jwt_secret, {}, (err, token) => {
           if (err) {
             console.error(err);
             throw err;

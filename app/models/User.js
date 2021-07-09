@@ -22,7 +22,7 @@ const UserSchema = new Schema({
             type: Date
         }
     },
-    profile_pic : {
+    profile_image : {
         type: String
     },
     circles: [{
