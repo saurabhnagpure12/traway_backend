@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const config = require("config");
+const config = require('../../config/app.js');
 
 module.exports = {
   transporter : nodemailer.createTransport({
@@ -7,8 +7,8 @@ module.exports = {
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: config.get('nodemailerUserEmail'),
-      pass: config.get('nodemailerUserPassword'),
+      user: config.app.nodemailer.user_email,
+      pass: config.app.nodemailer.user_password,
     },
   })
 

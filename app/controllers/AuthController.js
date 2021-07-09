@@ -1,9 +1,9 @@
 const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
-const config = require("config");
+const config = require('../../config/app.js');
 const jwt = require("jsonwebtoken");
 const validator = require("../util/validations.js");
-const configuration = require("../util/configurations.js");
+const mailer = require("../util/mailer.js");
 
 // Load Models
 const User = require("../models/User");
@@ -50,12 +50,12 @@ exports.sendOTP = async function (req, res) {
 
     // Send Email
     const message = {
-      from: config.get("nodemailerUserEmail"), // Sender address
+      from: config.app.nodemailer.user_email, // Sender address
       to: email, // List of recipients
       subject: "Here's your OTP for login", // Subject line
       html: `Hey,<br> This is your OTP: ${otp}<br><br>Team Ermin Traway`,
     };
-    configuration.transporter.sendMail(message, function (err, info) {
+    mailer.transporter.sendMail(message, function (err, info) {
       if (err) {
         console.log(err);
         throw new Error("Cannot Send Email");

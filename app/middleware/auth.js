@@ -1,6 +1,6 @@
 // Dependencies
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const config = require('../../config/app.js');
 
 module.exports = function(req,res,next) {
     const token = req.header('auth-token');
@@ -9,7 +9,7 @@ module.exports = function(req,res,next) {
         return res.status(400).json({ errors: [ { 'msg' : 'No token Authorization denied' }]});
     }
     try{
-        const decoded = jwt.verify(token, config.get('jwtSecret'));
+        const decoded = jwt.verify(token, config.app.jwt_secret);
         req.user = decoded.user;
         next();
     }

@@ -2,10 +2,10 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
-const config = require("config");
 const fileUpload = require("express-fileupload");
 const app = express();
 require('dotenv').config();
+const config = require('./config/app.js');
 
 
 
@@ -17,7 +17,7 @@ app.use(fileUpload());
 
 // Connect to Database
 mongoose
-  .connect(config.get('mongoURI'), {
+  .connect(config.app.mongodb.uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: true,
