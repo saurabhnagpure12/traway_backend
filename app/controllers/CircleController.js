@@ -214,9 +214,9 @@ exports.removeMember = async function (req, res) {
     console.log(circle);
 
     if (circle != null) {
-      let a = await Circle.updateOne(
+      let a = await Circle.update(
         { circle_code: circle_code },
-        { $pullAll: { members: [{ user_id: member_user_id }] } }
+        { $pull: { "members": { "user_id": member_user_id } } }
       );
       console.log(a);
 
