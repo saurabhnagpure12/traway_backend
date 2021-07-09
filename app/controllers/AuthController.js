@@ -1,9 +1,9 @@
 const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
-const config = require("config");
+const config = require('../../config/app.js');
 const jwt = require("jsonwebtoken");
 const validator = require("../util/validations.js");
-const configuration = require("../util/configurations.js");
+const mailer = require("../util/mailer.js");
 
 // Load Models
 const User = require("../models/User");
@@ -50,12 +50,12 @@ exports.sendOTP = async function (req, res) {
 
     // Send Email
     const message = {
-      from: config.get("nodemailerUserEmail"), // Sender address
+      from: config.app.nodemailer.user_email, // Sender address
       to: email, // List of recipients
       subject: "Here's your OTP for login", // Subject line
       html: `Hey,<br> This is your OTP: ${otp}<br><br>Team Ermin Traway`,
     };
-    configuration.transporter.sendMail(message, function (err, info) {
+    mailer.transporter.sendMail(message, function (err, info) {
       if (err) {
         console.log(err);
         throw new Error("Cannot Send Email");
@@ -108,7 +108,7 @@ exports.verifyOTP = async function (req, res) {
             id: updatedUser.id,
           },
         };
-        jwt.sign(payload, config.get("jwtSecret"), {}, (err, token) => {
+        jwt.sign(payload, config.app.jwt_secret, {}, (err, token) => {
           if (err) {
             console.error(err);
             throw err;
@@ -136,4 +136,21 @@ exports.verifyOTP = async function (req, res) {
     }
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
   }
+};
+
+
+
+
+exports.logoutUser = async function (req, res) {
+  try{
+    const checkUser = await User.findById(req.user.id);
+    if (!checkUser) {
+      return res.status(400).json({ data: [{ msg: "Invalid Auth Token" }] });
+    }
+    await User.remove("");
+  }
+  catch (err) {
+    return res.status(500).json({ errors: [{ msg: "Server Error" }] });
+  }
+
 };

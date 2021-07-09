@@ -22,12 +22,16 @@ const UserSchema = new Schema({
             type: Date
         }
     },
-    profile_pic : {
+    profile_image : {
         type: String
     },
-    circle: [{
+    circles: [{
         type: Schema.Types.ObjectId,
         ref: 'circle'
+    }],
+	ciphers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'cipher'
     }],
     created_at:{
         type: Date,

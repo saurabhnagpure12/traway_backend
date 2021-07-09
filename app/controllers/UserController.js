@@ -1,6 +1,13 @@
 // Load Models
 const User = require("../models/User");
 const { validationResult } = require("express-validator");
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
 
 exports.saveName = async function (req, res) {
   try {
@@ -40,5 +47,46 @@ exports.getProfile = async function (req, res) {
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ errors: [{ msg: "Server Error" }] });
+  }
+};
+
+
+exports.updateProfileImage = async function (req, res) {
+  try {
+
+    const userId = req.user.id;
+
+    let file = req.files.profile_image;
+
+    let ext = file.name.split(".");
+    ext = "."+ext[ext.length-1];
+
+    const params = {
+       Bucket: 'ermin-traway-backend',
+       Key: 'profile_images/'+userId+ext,
+       Body: file.data
+    };
+
+    s3.upload(params, async function(err, data) {
+
+     if(err){
+       throw err;
+     }
+
+     await User.updateOne(
+       { _id: userId },
+       {
+         $set: {
+            profile_image : data.Location
+         },
+       }
+     );
+
+     return res.status(200).json({ data: [{ msg: "Profile Image Updated", 'profile_image' : data.Location }] });
+    });
+
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ errors: [{ msg: "Error Occurred while uploading profile image" }] });
   }
 };

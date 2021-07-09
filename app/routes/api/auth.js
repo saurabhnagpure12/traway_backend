@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var authController = require('../../controllers/AuthController.js');
 const { check } = require('express-validator');
+const auth = require('../../middleware/auth');
 
 
 // @route /api/v1/authenticate
@@ -18,7 +19,7 @@ router.post('/verify',[
 ], authController.verifyOTP);
 
 
-
+router.post('/logout', auth, authController.logoutUser);
 
 
 

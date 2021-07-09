@@ -15,11 +15,22 @@ exports.createCircle = async function (req, res) {
   try {
     const { circle_name } = req.body;
     const circleCode = generateCircleCode();
-    const circle = await Circle({
+    let circle = await Circle({
       circle_name: circle_name,
       circle_code: circleCode,
       members: [{ user_id: req.user.id, type: "admin" }],
     }).save();
+
+  	let user = await User.findById(req.user.id);
+  	user.circles.push(circle._id);
+  	await user.save();
+
+    circle = circle.toObject();
+    circle.members = [{
+      email : user.email,
+      name : user.name,
+      type: 'admin'
+    }];
 
     return res.status(200).json({
       status: "success",
@@ -27,6 +38,7 @@ exports.createCircle = async function (req, res) {
       data: circle,
     });
   } catch (e) {
+	  console.log(e);
     res.status(500).json({
       data: [{ msg: "Failed creating circle" }],
     });
@@ -35,71 +47,32 @@ exports.createCircle = async function (req, res) {
 
 exports.getCircles = async function (req, res) {
   try {
-    const userId = req.user.id;
 
-    const userCircles = await Circle.find({ "members.user_id": userId });
+	let user = await User.findById(req.user.id);
+	let circles = [];
 
-    // userCircles.forEach((value) => {
-    //   let circleMembers = value.members;
-    //   circleMembers.forEach(async (val) => {
-    //     let userId = val.user_id;
-    //     let user = await User.findById(userId);
-    //     console.log(user);
-    //   });
-    // })
-    // return res.status(200).json({
-    //   status: "success",
-    //   msg: "User circles fetched",
-    //   data: userCircles
-    // });
-    Circle.aggregate(
-      [
-        {
-          $match: {
-            circle_name: "Thunderbuddies",
-          },
-        },
-        {
-          $unwind: {
-            path: "$members",
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "members.user_id",
-            foreignField: "_id",
-            as: "members.user",
-          },
-        },
-        {
-          $unwind: {
-            path: "$members.user_id",
-          },
-        },
-        {
-          $group: {
-            _id: "$_id",
-            members: {
-              $push: "$members",
-            },
-          },
-        },
-      ],
-      function (error, data) {
-        if (error != null) {
-          return res.status(500).json({
-            status: "failed",
-            msg: error,
-          });
-        }
-        return res.status(200).json({
-          status: "success",
-          msg: "User circles fetched",
-          data: data,
-        });
-      }
-    );
+	for(let i=0; i< user.circles.length; i++){
+		let circle = await Circle.findById(user.circles[i]).lean();
+    let members = [];
+    for(let j=0; j< circle.members.length; j++){
+      let ob = await User.findById(circle.members[j]['user_id']).lean();
+      let member = {
+        user_id: ob._id,
+        email : ob.email,
+        name : ob.name,
+        type: circle.members[j]['type']
+      };
+      members.push(member);
+  	}
+    circle.members = members;
+		circles.push(circle);
+	}
+
+	return res.status(200).json({
+      status: "success",
+      msg: "Circles Fetched",
+	    data: circles
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({
@@ -112,13 +85,17 @@ exports.deleteCircle = async function (req, res) {
   try {
     const { circle_code } = req.body;
     const userId = req.user.id;
-    let circle = await Circle.find({
+    let circle = await Circle.findOne({
       circle_code: circle_code,
       "members.user_id": userId,
       "members.type": "admin",
     });
 
     if (circle.length != 0) {
+      circle.members.forEach(async (value)=>{
+        await User.findByIdAndUpdate( value.user_id, { $pullAll: {circles: [circle._id] } } );
+      });
+
       await Circle.deleteOne({ circle_code: circle_code });
 
       return res
@@ -136,7 +113,7 @@ exports.deleteCircle = async function (req, res) {
   } catch (e) {
     console.log(e);
     res.status(500).json({
-      data: [{ msg: "Error occurred" }],
+      data: [{ msg: "Error occurred while deleting circle" }],
     });
   }
 };
@@ -172,7 +149,7 @@ exports.editCircleName = async function (req, res) {
     }
   } catch (e) {
     res.status(500).json({
-      data: [{ msg: "Error occurred" }],
+      data: [{ msg: "Error occurred while editing circle name" }],
     });
   }
 };
@@ -184,11 +161,14 @@ exports.joinCircle = async function (req, res) {
 
     const circle = await Circle.findOne({ circle_code: circle_code });
 
-    let responseMsg = "";
     if (circle == null) {
-      responseMsg = "Invalid Circle Code";
+      return res.status(400).json({
+        status: "failed",
+        msg: 'Invalid Circle Code',
+      });
     }
 
+    let responseMsg = "";
     let userExists = await Circle.find({
       circle_code: circle_code,
       "members.user_id": userId,
@@ -200,6 +180,11 @@ exports.joinCircle = async function (req, res) {
       if (circle.members.length >= 10) {
         responseMsg = "Circle Member Limit Reached";
       } else {
+
+        let user = await User.findById(userId);
+      	user.circles.push(circle._id);
+      	await user.save();
+
         circle.members.push({ user_id: userId, type: "member" });
         circle.save();
         responseMsg = "Joined Circle";
@@ -221,16 +206,22 @@ exports.removeMember = async function (req, res) {
   try {
     const { member_user_id, circle_code } = req.body;
 
-    let circle = await Circle.find({
+    let circle = await Circle.findOne({
       circle_code: circle_code,
       "members.user_id": member_user_id,
     });
 
-    if (circle.length != 0) {
-      await Circle.updateOne(
+    console.log(circle);
+
+    if (circle != null) {
+      let a = await Circle.update(
         { circle_code: circle_code },
-        { $pullAll: { members: [{ user_id: member_user_id }] } }
+        { $pull: { "members": { "user_id": member_user_id } } }
       );
+      console.log(a);
+
+      await User.findByIdAndUpdate( member_user_id, { $pullAll: {circles: [circle._id] } } );
+
       return res
         .status(200)
         .json({ data: [{ msg: "Member removed successfully from circle" }] });
