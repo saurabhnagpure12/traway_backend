@@ -10,7 +10,9 @@
   "author": "Ermin Tech Team",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.942.0",
     "config": "^3.3.6",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-validator": "^6.11.1",

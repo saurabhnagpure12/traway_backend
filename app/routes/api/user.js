@@ -13,4 +13,6 @@ router.post(
 );
 router.get("/profile", auth, userController.getProfile);
 
+router.post("/profile/image", auth, userController.updateProfileImage);
+
 module.exports = router;
