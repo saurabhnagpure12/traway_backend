@@ -29,7 +29,8 @@ exports.createCipher = async function (req, res) {
     return res.status(200).json({
       status: "success",
       msg: "Cipher Created",
-      cipher_id: cipher._id
+      cipher_id: cipher._id,
+      cipher_code: cipher_code
     });
   } catch (e) {
 	  console.log(e);
