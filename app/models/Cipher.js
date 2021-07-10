@@ -9,11 +9,11 @@ const CipherSchema = new Schema({
         type: String,
         required:true
     },
-	lat_long : [
-		{
-			type: String
-		}
-	],
+  	lat_long : [
+  		{
+  			type: String
+  		}
+  	],
     place_details:{
         type: String,
         required:true

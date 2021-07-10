@@ -29,7 +29,7 @@ exports.createCipher = async function (req, res) {
     return res.status(200).json({
       status: "success",
       msg: "Cipher Created",
-      cipher_code: cipher_code
+      cipher_id: cipher._id
     });
   } catch (e) {
 	  console.log(e);
@@ -38,6 +38,51 @@ exports.createCipher = async function (req, res) {
     });
   }
 };
+
+
+
+exports.updateCipherCode = async function (req, res) {
+
+  try{
+      let { cipher_id, cipher_code } = req.body;
+
+      let cipher = await Cipher.find({cipher_code: cipher_code});
+
+      if(cipher.length != 0){
+        res.status(406).json({
+          data: [{ msg: "Cipher Code already taken" }],
+        });
+      }
+
+      let result = await Cipher.updateOne(
+        { _id: cipher_id },
+        {
+          $set: {
+             cipher_code
+          },
+        }
+      );
+
+      console.log(result.nModified);
+
+      if(result.nModified == 0){
+        res.status(406).json({
+          data: [{ msg: "Invalid Cipher Id" }],
+        });
+      }
+
+      res.status(200).json({
+        data: [{ msg: "Cipher Code Updated" }],
+      });
+
+  }
+  catch (e) {
+	  console.log(e);
+    res.status(500).json({
+      data: [{ msg: "Failed creating cipher" }],
+    });
+  }
+}
 
 
 
@@ -69,24 +114,24 @@ exports.getCiphers = async function (req, res) {
 
 exports.deleteCipher = async function (req, res) {
   try {
-    const { cipher_code } = req.body;
+    const { cipher_id } = req.body;
     const userId = req.user.id;
-    let cipher = await Cipher.findOne({
-      cipher_code: cipher_code
-    });
 
-    if (cipher.length != 0) {
-	     await User.findByIdAndUpdate( userId, { $pullAll: {ciphers: [cipher._id] } } );
-       await Cipher.deleteOne({ cipher_code: cipher_code });
+    let cipher = await Cipher.findById(cipher_id);
+    console.log(cipher);
+    if (cipher != null) {
+	     let result = await User.findByIdAndUpdate( userId, { $pullAll: {ciphers: [cipher._id] } } );
+       console.log(result);
+       await Cipher.deleteOne({ _id: cipher_id });
 
       return res
         .status(200)
-        .json({ data: [{ msg: "Deleted Cipher with code: " + cipher_code }] });
+        .json({ data: [{ msg: "Deleted Cipher"}] });
     } else {
       return res.status(406).json({
         data: [
           {
-            msg: "Invalid cipher_code",
+            msg: "Invalid cipher id",
           },
         ],
       });
@@ -101,17 +146,15 @@ exports.deleteCipher = async function (req, res) {
 
 exports.updateCipher = async function (req, res) {
   try {
-    const { cipher_code, lat_long, place_details, place_area,
+    const { cipher_id, cipher_code, lat_long, place_details, place_area,
 			place_state, place_city, place_pincode, place_category } = req.body;
     const userId = req.user.id;
 
-	  let cipher = await Cipher.findOne({
-      cipher_code: cipher_code
-    });
+	  let cipher = await Cipher.findById(cipher_id);
 
     if (cipher != null) {
       await Cipher.updateOne(
-        { cipher_code },
+        { _id: cipher_id },
         {
           $set: {
             cipher_code, lat_long, place_details, place_area,
@@ -124,7 +167,7 @@ exports.updateCipher = async function (req, res) {
       return res.status(406).json({
         data: [
           {
-            msg: "Invalid cipher_code",
+            msg: "Invalid cipher id",
           },
         ],
       });

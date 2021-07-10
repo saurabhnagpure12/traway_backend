@@ -5,7 +5,7 @@ const User = require("../models/User");
 
 function generateCircleCode() {
   return randomstring.generate({
-    length: 10,
+    length: 6,
     charset: "alphanumeric",
     capitalization: "uppercase",
   });

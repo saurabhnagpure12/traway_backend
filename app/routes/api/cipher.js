@@ -7,6 +7,7 @@ const auth = require('../../middleware/auth');
 
 
 router.post('/', auth, cipherController.createCipher);
+router.post('/code', auth, cipherController.updateCipherCode);
 router.get('/', auth, cipherController.getCiphers);
 router.delete('/', auth, cipherController.deleteCipher);
 router.put('/', auth, cipherController.updateCipher);
