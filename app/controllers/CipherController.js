@@ -147,7 +147,7 @@ exports.deleteCipher = async function (req, res) {
 
 exports.updateCipher = async function (req, res) {
   try {
-    const { cipher_id, cipher_code, lat_long, place_details, place_area,
+    const { cipher_id, cipher_code, place_details, place_area,
 			place_state, place_city, place_pincode, place_category } = req.body;
     const userId = req.user.id;
 
@@ -158,7 +158,7 @@ exports.updateCipher = async function (req, res) {
         { _id: cipher_id },
         {
           $set: {
-            cipher_code, lat_long, place_details, place_area,
+            cipher_code, place_details, place_area,
 			place_state, place_city, place_pincode, place_category
           },
         }
