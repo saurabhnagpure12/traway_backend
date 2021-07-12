@@ -1,24 +1,53 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Socket.io</title>
+    </head>
+    <body>
+        <h1>Express and socket.io</h1>
+        <button type="button" onclick="updateLocation()">update location</button>
+        <script src="socket.io/socket.io.js"></script>
+        <script>
+            var socket = io('http://localhost:5000');
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
+            //connect to circle
+            socket.emit('connect to circle', {
+              "circle_id" : "60ec5a72610e7611d8ba3416",
+              "user_id" : "60e955b74df5ad121dd7f29f",
+              "lat_long" : ["x", "y"]
+            });
 
-    <title>Ermin Automotive</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
+            socket.on('request member to join room', function (data) {
+              console.log('request member to join room');
+              console.log(data);
+                if(data.user_id == "60e955b74df5ad121dd7f29f"){
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="js/main.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+                  socket.emit('join room', {
+                    "circle_id" : data.circle_id,
+                    "user_id" : data.user_id,
+                    "lat_long" : ["x", "y"]
+                  });
+                }
+            });
+
+
+            //read other circle members location and mark on map
+            socket.on('mark member location', function (data) {
+                //mark location of data.user_id with data.lat_long for data.circle_id
+                console.log('mark user location');
+                console.log(data);
+            });
+
+
+
+            function updateLocation(){
+              //when current user location is changed
+              socket.emit('update location', {
+                "user_id" : "60e955b74df5ad121dd7f29f",
+                "lat_long" : ["x1", "y1"] });
+            }
+
+        </script>
+    </body>
 </html>

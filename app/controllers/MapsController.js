@@ -36,7 +36,7 @@ exports.storeUserLocationSearch = async function (req, res) {
       // Grab all previous locations
       const locations = user.recent_search_locations;
       // check and delete if location exist
-      locations.map((location, index) => {
+      locations.forEach((location, index) => {
         if (location && location.location_id === location_id) {
           locations.splice(index, 1);
         }
