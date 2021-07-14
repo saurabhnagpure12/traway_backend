@@ -103,7 +103,7 @@ io.on('connection', function (client) {
   client.on('update location', function name(data) {
     console.log('update location');
     console.log(data);
-    io.to(client.circle).emit('mark member location', {
+    client.to(client.circle).emit('mark member location', {
       "user_id" : data.user_id,
       "user_name" : data.user_name,
       "lat_long" : data.lat_long,
