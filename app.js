@@ -97,8 +97,10 @@ io.on('connection', function (client) {
     console.log('join room');
     console.log(data);
     client.join(data.circle_id);
+
+    client.to(data.circle_id).emit('mark member location', data);
+
     delete data.circle_id;
-    io.emit('mark member location', data);
   })
 
   client.on('update location', function name(data) {
