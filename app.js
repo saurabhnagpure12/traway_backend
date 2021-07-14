@@ -96,11 +96,15 @@ io.on('connection', function (client) {
   client.on('join room', function name(data) {
     console.log('join room');
     console.log(data);
-    client.join(data.circle_id);
+    let circle_id = data.circle_id;
 
-    client.to(data.circle_id).emit('mark member location', data);
+    client.join(circle_id);
 
     delete data.circle_id;
+
+    client.to(circle_id).emit('mark member location', data);
+
+
   })
 
   client.on('update location', function name(data) {
