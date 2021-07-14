@@ -69,6 +69,7 @@ io.on('connection', function (client) {
     console.log(data);
 
     client.join(data.circle_id);
+    client.circle = data.circle_id;
 
     let circle = await Circle.findById(client.circle).lean();
 
@@ -96,6 +97,7 @@ io.on('connection', function (client) {
     console.log('join room');
     console.log(data);
     client.join(data.circle_id);
+    delete data.circle_id;
     io.emit('mark member location', data);
   })
 
@@ -106,7 +108,6 @@ io.on('connection', function (client) {
     //   "user_id" : data.user_id,
     //   "user_name" : data.user_name,
     //   "lat_long" : data.lat_long,
-    //   "circle_id" : data.circle_id
     // }
     client.to(client.circle).emit('mark member location', data);
   })
