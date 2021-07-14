@@ -77,7 +77,7 @@ io.on('connection', function (client) {
     circle.members.forEach((member) =>{
 
       if(member.user_id != data.user_id){
-        
+
         console.log("yes");
         io.emit('request member to join room', {
           "circle_id" : client.circle,
@@ -105,6 +105,7 @@ io.on('connection', function (client) {
     console.log(data);
     io.to(client.circle).emit('mark member location', {
       "user_id" : data.user_id,
+      "user_name" : data.user_name,
       "lat_long" : data.lat_long,
       "circle_id" : client.circle
     });
