@@ -61,7 +61,8 @@ exports.getCircles = async function (req, res) {
         email : ob.email,
         name : ob.name,
         profile_image: ob.profile_image,
-        type: circle.members[j]['type']
+        type: circle.members[j]['type'],
+        last_seen: ob.last_seen_latlong
       };
       members.push(member);
   	}

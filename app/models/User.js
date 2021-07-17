@@ -25,6 +25,10 @@ const UserSchema = new Schema({
     profile_image : {
         type: String
     },
+    last_seen_latlong : [{
+        type: String,
+      }
+    ],
     circles: [{
         type: Schema.Types.ObjectId,
         ref: 'circle'

@@ -131,3 +131,31 @@ exports.removeProfileImage = async function(req, res){
     return res.status(500).json({ errors: [{ msg: "Error Occurred while removing profile image" }] });
   }
 }
+
+
+
+exports.updateLastSeenLatLong = async function(req, res) {
+  try{
+    const userId = req.user.id;
+    const { last_seen_latlong } = req.body;
+    const user= await User.findById(userId);
+    if(!user){
+      return res.status(400).json({ errors: [{ msg: "User Does Not Exist" }] });
+    }
+    await User.updateOne(
+      { _id: userId },
+      {
+        $set: {
+           last_seen_latlong
+        },
+      }
+    );
+    return res
+      .status(200)
+      .json({ data: [{ msg: "User Last Seen Location updated" }] });
+  }
+  catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ errors: [{ msg: "Error Occurred while updating user last seen location" }] });
+  }
+}

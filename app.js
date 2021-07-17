@@ -78,15 +78,11 @@ io.on('connection', function (client) {
 
       if(member.user_id != data.user_id){
 
-        console.log("yes");
         io.emit('request member to join room', {
           "circle_id" : client.circle,
           "user_id" : member.user_id
         });
 
-      }
-      else{
-        console.log("no");
       }
 
     });
