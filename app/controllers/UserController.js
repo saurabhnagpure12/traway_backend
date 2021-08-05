@@ -156,6 +156,6 @@ exports.updateLastSeenLatLong = async function(req, res) {
   }
   catch (err) {
     console.log(err.message);
-    return res.status(500).json({ errors: [{ msg: "Error Occurred while updating user last seen location" }] });
+    return res.status(500).json({ errors: [{ msg: "Error Occurred while updating user last seen" }] });
   }
 }
