@@ -25,15 +25,20 @@ const UserSchema = new Schema({
     profile_image : {
         type: String
     },
-    last_seen_latlong : [{
-        type: String,
+    last_seen : {
+      lat_long: [{
+        type: String
+      }],
+      date_time: {
+        type: Date,
+        default: Date.now
       }
-    ],
+    },
     circles: [{
         type: Schema.Types.ObjectId,
         ref: 'circle'
     }],
-	ciphers: [{
+	  ciphers: [{
         type: Schema.Types.ObjectId,
         ref: 'cipher'
     }],

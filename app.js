@@ -100,7 +100,6 @@ io.on('connection', function (client) {
 
     client.to(circle_id).emit('mark member location', data);
 
-
   })
 
   client.on('update location', function name(data) {
@@ -128,6 +127,6 @@ io.on('connection', function (client) {
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, () => {
   console.log(`Server started at PORT: ${PORT}`);
 });
