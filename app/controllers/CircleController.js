@@ -62,7 +62,7 @@ exports.getCircles = async function (req, res) {
         name : ob.name,
         profile_image: ob.profile_image,
         type: circle.members[j]['type'],
-        last_seen: ob.last_seen_latlong
+        last_seen: ob.last_seen
       };
       members.push(member);
   	}
