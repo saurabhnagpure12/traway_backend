@@ -26,12 +26,11 @@ const UserSchema = new Schema({
         type: String
     },
     last_seen : {
-      lat_long: [{
+      latlong: [{
         type: String
       }],
       date_time: {
-        type: Date,
-        default: Date.now
+        type: Date
       }
     },
     circles: [{

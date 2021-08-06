@@ -137,7 +137,7 @@ exports.removeProfileImage = async function(req, res){
 exports.updateLastSeenLatLong = async function(req, res) {
   try{
     const userId = req.user.id;
-    const { last_seen } = req.body;
+    const { last_seen_latlong } = req.body;
     const user= await User.findById(userId);
     if(!user){
       return res.status(400).json({ errors: [{ msg: "User Does Not Exist" }] });
@@ -146,7 +146,10 @@ exports.updateLastSeenLatLong = async function(req, res) {
       { _id: userId },
       {
         $set: {
-           last_seen
+           last_seen : {
+             latlong : last_seen_latlong,
+             date_time : Date.now()
+           }
         },
       }
     );
