@@ -62,7 +62,7 @@ exports.updateProfileImage = async function (req, res) {
     ext = "."+ext[ext.length-1];
 
     const params = {
-       Bucket: 'ermin-traway-backend',
+       Bucket: 'traway-backend-bucket',
        Key: 'profile_images/'+userId+ext,
        Body: file.data
     };
