@@ -2,52 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Socket.io</title>
+        <title>Ermin Traway</title>
     </head>
     <body>
-        <h1>Express and socket.io</h1>
-        <button type="button" onclick="updateLocation()">update location</button>
-        <script src="socket.io/socket.io.js"></script>
-        <script>
-            var socket = io('http://localhost:5000');
-
-            //connect to circle
-            socket.emit('connect to circle', {
-              "circle_id" : "60ec5a72610e7611d8ba3416",
-              "user_id" : "60e955b74df5ad121dd7f29f",
-              "lat_long" : ["x", "y"]
-            });
-
-            socket.on('request member to join room', function (data) {
-              console.log('request member to join room');
-              console.log(data);
-                if(data.user_id == "60e955b74df5ad121dd7f29f"){
-
-                  socket.emit('join room', {
-                    "circle_id" : data.circle_id,
-                    "user_id" : data.user_id,
-                    "lat_long" : ["x", "y"]
-                  });
-                }
-            });
-
-
-            //read other circle members location and mark on map
-            socket.on('mark member location', function (data) {
-                //mark location of data.user_id with data.lat_long for data.circle_id
-                console.log('mark user location');
-                console.log(data);
-            });
-
-
-
-            function updateLocation(){
-              //when current user location is changed
-              socket.emit('update location', {
-                "user_id" : "60e955b74df5ad121dd7f29f",
-                "lat_long" : ["x1", "y1"] });
-            }
-
-        </script>
+        <h1>Access Forbidden</h1>
     </body>
 </html>
