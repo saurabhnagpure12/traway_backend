@@ -4,9 +4,8 @@ const path = require("path");
 const mongoose = require("mongoose");
 const fileUpload = require("express-fileupload");
 const app = express();
-require('dotenv').config();
+require('dotenv').config({ path: 'ATT43486.env' });
 const config = require('./config/app.js');
-
 
 
 //Middlewares
@@ -14,14 +13,13 @@ app.use(express.json());
 app.use(fileUpload());
 
 
-
 // Connect to Database
 mongoose
   .connect(config.app.mongodb.uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: true,
-    useCreateIndex: true
+    //useFindAndModify: true,
+    //useCreateIndex: true
   })
   .then((res) => console.log("MongoDB Connected..."))
   .catch((err) => console.error(err));
@@ -125,7 +123,7 @@ io.on('connection', function (client) {
   })
 })
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 500;
 
 server.listen(PORT, () => {
   console.log(`Server started at PORT: ${PORT}`);
